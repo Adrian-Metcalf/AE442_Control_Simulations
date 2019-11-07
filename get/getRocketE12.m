@@ -3,13 +3,13 @@
 function rocket = getRocket(motor)
 % Returns dimensions, cp, cg, and initial state of rocket
 
-rocket.structure.length = .4572; % 12 in rocket
+rocket.structure.length = .5; % 12 in rocket
 rocket.structure.tubeDiameter = 0.076; % m, diameter of rocket
 
 % fin data
 rocket.fin.numFins = 4; % number of fins
-rocket.fin.height = 0.1016; % m, axial height of rectangular fins
-rocket.fin.width = 0.0508; % m, radial width of fins
+rocket.fin.height = 0.0381; % m, axial height of rectangular fins
+rocket.fin.width = 0.0127; % m, radial width of fins
 rocket.fin.thickness = 0.003175; % m, thickness of fins
 rocket.fin.area = rocket.fin.height*rocket.fin.width; % m^2, area of one fin
 rocket.fin.AR = rocket.fin.width/rocket.fin.height; % nd, aspect ratio
@@ -19,12 +19,12 @@ rocket.structure.finMass = 0.01; % kg, mass of each fin
 rocket.structure.tubeMass = 0.03; % kg, mass of body tube
 rocket.structure.electronicsMass = 0.05; % kg, mass of electronics
 rocket.structure.ballastMass = 0.05; % kg, mass of all other components
-rocket.structure.dryMass = 1.08;%rocket.fin.numFins*rocket.structure.finMass + ...
+rocket.structure.dryMass = 0.707185;%rocket.fin.numFins*rocket.structure.finMass + ...
 %     rocket.structure.tubeMass + rocket.structure.electronicsMass + ...
 %     rocket.structure.ballastMass + motor.dryMass;
 
 rocket.structure.electronicsCg = 7/12*rocket.structure.length; % m, cg distance from bottom of rocket
-rocket.structure.ballastCg = 1/3*rocket.structure.length; % m, cg distance from bottom of rocket
+rocket.structure.ballastCg = 2/3*rocket.structure.length; % m, cg distance from bottom of rocket
 
 rocket.aero.finClSlope = 2*pi; % nd, lift slope of fins with aoa
 rocket.aero.finCd = .03; % nd, drag coefficient of fins

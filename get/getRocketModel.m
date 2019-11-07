@@ -1,3 +1,5 @@
+% Destiny Fawley
+% 11/6/2019
 function [pointsRocket, facesRocket, cdataRocket, ...
     pointsThruster, facesThruster, cdataThruster] = getRocketModel(rocket)
 

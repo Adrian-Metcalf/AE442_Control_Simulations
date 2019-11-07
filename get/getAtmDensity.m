@@ -1,3 +1,5 @@
+% Destiny Fawley
+% 11/6/2019
 function rho = getAtmDensity(pos, models)
 
 switch models.atmMode

@@ -1,3 +1,5 @@
+% Destiny Fawley
+% 11/6/2019
 function rocket = getRocketTradeStudy1(motor, mass, alt0, length, diameter)
 % Returns dimensions, cp, cg, and initial state of rocket
 
@@ -14,7 +16,7 @@ rocket.fin.AR = rocket.fin.width/rocket.fin.height; % nd, aspect ratio
 
 % mass and MOI data
 rocket.structure.finMass = 0.01; % kg, mass of each fin
-rocket.structure.tubeMass = 0.03; % kg, mass of body tube
+rocket.structure.tubeMass = mass-.11; % kg, mass of body tube
 rocket.structure.electronicsMass = 0.05; % kg, mass of electronics
 rocket.structure.ballastMass = 0.05; % kg, mass of all other components
 rocket.structure.dryMass = mass-motor.wetMass;%rocket.fin.numFins*rocket.structure.finMass + ...
@@ -30,6 +32,6 @@ rocket.aero.bodyCd = 1.12;  % nd, drag coefficient of body
 
 % iniial state 
 % [posX posY posZ velX velY velZ roll pitch yaw rollDot pitchDot yawDot mass]
-rocket.y0 = [0 0 alt0 0 0 0 0 0 0 0 0 0 rocket.structure.dryMass+motor.wetMass]';
+rocket.y0 = [0 0 alt0 0 0 0 0 0 0 0 0 0 motor.wetMass]';
 
 end
