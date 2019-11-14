@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function motordata = B4Motor()
 
 motordata.thrust = [

@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function motordata = E31Motor()
 
 motordata.thrust = [

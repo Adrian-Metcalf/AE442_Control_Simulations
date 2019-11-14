@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function motordata = C3Motor()
 % http://nar.org/SandT/pdf/Estes/C6.pdf
 motordata.thrust = [

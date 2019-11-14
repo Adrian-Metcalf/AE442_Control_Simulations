@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function motordata = E18Motor()
 % http://www.thrustcurve.org/simfilesearch.jsp?id=638
 motordata.thrust = [
