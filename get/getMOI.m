@@ -132,8 +132,8 @@ Il = 2*Rlower1*Il*Rlower1' + 2*Rlower2*Il*Rlower2';
 Iu = 2*Rupper1*Iu*Rupper1' + 2*Rupper2*Iu*Rupper2';
 ILegs = Il + Iu;
 
-Ixx = IxxFins+IxxTube+IxxMotor+IxxElectronics+IxxEpoxy+IxxGimbal;
-Iyy = IyyFins+IyyTube+IyyMotor+IyyElectronics+IyyEpoxy+IyyGimbal;
+Ixx = IxxFins+IxxTube+IxxMotor+IxxEpoxy+IxxGimbal+IxxElectronics;
+Iyy = IyyFins+IyyTube+IyyMotor+IyyEpoxy+IyyGimbal+IyyElectronics;
 Izz = IzzFins+IzzTube+IzzMotor+IzzElectronics+IzzEpoxy+IzzGimbal;
 
 MOI = [Ixx 0 0;
