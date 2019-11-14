@@ -5,17 +5,17 @@ clear all;
 close all
 run setup.m
 
-mass = .8;
+mass = 1.08;
 diameter = .0762;
 leng = .508;
-alt0 = 12.192;
+alt0 = 20;
 
 
-motor = E12Motor();
+motor = E18Motor();
 controller = [];
 models = getModels();
 
-rocket = getRocketTradeStudy3(motor, mass, alt0, leng, diameter);
+rocket = getRocketCDR(motor, mass, alt0, leng, diameter);
 result = simulate(motor,rocket,controller, models);
 
 %%

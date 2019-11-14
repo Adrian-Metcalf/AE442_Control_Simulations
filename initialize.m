@@ -1,47 +1,51 @@
-function result = initialize(rocket, ctrl, nav, trajCalcs)
+% Destiny Fawley
+% 11/6/2019
+
+function result = initialize(rocket, ctrl, nav, trajCalcs, models)
 
 % Trajectory
-result.traj.tCurr = 0;
-result.traj.posI = rocket.y0(1:3);
-result.traj.velI = rocket.y0(4:6);
-result.traj.EulerAngles = rocket.y0(7:9);
-result.traj.omega = rocket.y0(10:12);
-result.traj.propMass = rocket.y0(13);
-result.traj.thrustI = trajCalcs.FThrustI;
-result.traj.gravityI = trajCalcs.FGravI;
-result.traj.dragBodyI = trajCalcs.FDragBodyI;
-result.traj.dragFin1I = trajCalcs.FDragFinI(:,1);
-result.traj.dragFin2I = trajCalcs.FDragFinI(:,2);
-result.traj.dragFin3I = trajCalcs.FDragFinI(:,3);
-result.traj.liftFin1I = trajCalcs.FLiftFinI(:,1);
-result.traj.liftFin2I = trajCalcs.FLiftFinI(:,2);
-result.traj.liftFin3I = trajCalcs.FLiftFinI(:,3);
-result.traj.momentFin1I = trajCalcs.MFinsI(:,1);
-result.traj.momentFin2I = trajCalcs.MFinsI(:,2);
-result.traj.momentFin3I = trajCalcs.MFinsI(:,3);
-result.traj.rho = trajCalcs.rho;
-result.traj.qi2b = trajCalcs.qi2b;
-result.traj.clFin = trajCalcs.clFin';
-result.traj.cdFin = trajCalcs.cdFin';
-result.traj.aoa = trajCalcs.alpha';
+result.traj.tCurr = NaN(1,length(models.maxIter));
+result.traj.posI = NaN(3,length(models.maxIter));
+result.traj.velI = NaN(3,length(models.maxIter));
+result.traj.EulerAngles = NaN(3,length(models.maxIter));
+result.traj.omega = NaN(3,length(models.maxIter));
+result.traj.propMass = NaN(1,length(models.maxIter));
+result.traj.thrustI = NaN(3,length(models.maxIter));
+result.traj.gravityI = NaN(3,length(models.maxIter));
+result.traj.dragBodyI = NaN(3,length(models.maxIter));
 
-if rocket.fin.numFins > 4
-    result.traj.dragFin4I = trajCalcs.FDragFinI(:,4);
-    result.traj.liftFin4I = trajCalcs.FLiftFinI(:,4);
-    result.traj.momentFin4I = trajCalcs.MFinsI(:,4);
-end
+result.traj.dragFin1I = NaN(3,length(models.maxIter));
+result.traj.dragFin2I = NaN(3,length(models.maxIter));
+result.traj.dragFin3I = NaN(3,length(models.maxIter));
+result.traj.dragFin4I = NaN(3,length(models.maxIter));
+
+result.traj.liftFin1I = NaN(3,length(models.maxIter));
+result.traj.liftFin2I = NaN(3,length(models.maxIter));
+result.traj.liftFin3I = NaN(3,length(models.maxIter));
+result.traj.liftFin4I = NaN(3,length(models.maxIter));
+
+result.traj.momentFin1I = NaN(3,length(models.maxIter));
+result.traj.momentFin2I = NaN(3,length(models.maxIter));
+result.traj.momentFin3I = NaN(3,length(models.maxIter));
+result.traj.momentFin4I = NaN(3,length(models.maxIter));
+
+result.traj.rho = NaN(1,length(models.maxIter));
+result.traj.qi2b = NaN(4,length(models.maxIter));
+result.traj.clFin = NaN(4,length(models.maxIter));
+result.traj.cdFin = NaN(4,length(models.maxIter));
+result.traj.aoaFin = NaN(4,length(models.maxIter));
 
 % Navigation
-result.nav.posI = nav.posI;
-result.nav.velI = nav.velI;
-result.nav.EularAngles = nav.EulerAngles;
-result.nav.omega = nav.omega;
+result.nav.posI = NaN(3,length(models.maxIter));
+result.nav.velI = NaN(3,length(models.maxIter));
+result.nav.EularAngles = NaN(3,length(models.maxIter));
+result.nav.omega = NaN(3,length(models.maxIter));
 
 % Control
-result.ctrl.igniteCotor = ctrl.igniteMotor;
-result.ctrl.tIgnite = ctrl.tIgnite;
+result.ctrl.igniteCotor = NaN(1,length(models.maxIter));
+result.ctrl.tIgnite = NaN(1,length(models.maxIter));
 
-result.term.endCondition = 0;
+result.term.endCondition = NaN(1,length(models.maxIter));
 
 
 

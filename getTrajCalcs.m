@@ -1,8 +1,12 @@
+% Destiny Fawley
+% 11/6/2019
+
 function trajCalcs = getTrajCalcs(tCurr, yi, rocket, motor, ctrl, models)
 
 pos = yi(1:3); % m, position vector, (x,y,z)
 vel = yi(4:6); % m/s, velocity vector
-angPos = yi(7:9); % rad, euler angles, (theta, phi, psi) = (roll, pitch, yaw)
+angPos = yi(7:9); % rad, 321 euler angles, (theta, phi, psi) = (roll, pitch, yaw)
+angVel = yi(10:12); % rad/s, inertial angular velocity (NOT angular rates)
 propMass = yi(13); % kg, mass of propellant left
 
 cg = getCg(rocket, motor, propMass); % cg from bottom of rocket
@@ -50,8 +54,7 @@ liftVec = cross(dragVec, finRadialVecI);
 liftVec = unit(liftVec); % nd, direction of lift vector
 
 FDragFinI = .5*rho*velPerpMag.^2*rocket.fin.area.*cdFin.*dragVec;
-FLiftFinI = zeros(size(FDragFinI));
-% .5*rho*velPerpMag.^2*rocket.fin.area.*clFin.*liftVec;
+FLiftFinI = .5*rho*velPerpMag.^2*rocket.fin.area.*clFin.*liftVec;
 
 %% Body Tube and Nosecone Drag
 % Assume constant drag and no lift
@@ -71,7 +74,9 @@ if ctrl.igniteMotor
     else
         thrust = interp1(motor.thrust(:,1), motor.thrust(:,2), tCurr - ctrl.tIgnite);
     end
-    FThrustB = [0; 0; 1]*thrust;
+    FThrustB = -[sin(ctrl.alpha)*cos(ctrl.beta);
+                sin(ctrl.beta); 
+                -cos(ctrl.alpha)*cos(ctrl.beta)]*thrust;
     
     % Find dm/dt from thrust
     switch models.deltaMassMode
@@ -97,10 +102,19 @@ FGravI = [0; 0; -9.81*massTot];
 % Get moments on fins and body tube
 % Assume force acts in center of fins
 FFinsI = FDragFinI + FLiftFinI;
-MFinsI = cross(rCgFinsI, FFinsI);
+MFinsI(:,1) = cross(rCgFinsI(:,1), FFinsI(:,1));
+MFinsI(:,2) = cross(rCgFinsI(:,2), FFinsI(:,2));
+MFinsI(:,3) = cross(rCgFinsI(:,3), FFinsI(:,3));
+MFinsI(:,4) = cross(rCgFinsI(:,4), FFinsI(:,4));
+
+rCgMotorI = quatVectorRotation(quatConjugate(qi2b),[0;0;motor.height/2-cg]);
+MThrustI = cross(rCgMotorI, FThrustI);
 
 
-accel = (sum(FFinsI')' + FThrustI + FGravI)/massTot;
+sumMoments = sum(MFinsI,2) + MThrustI;
+
+angAccel = (MOI\eye(3))*sumMoments; % sum M = I*alpha
+accel = (sum(FFinsI')' + FDragBodyI + FThrustI + FGravI)/massTot;
 %% Store Data
 trajCalcs.cg = cg;
 trajCalcs.massTot = massTot;
@@ -127,6 +141,7 @@ trajCalcs.MFinsI = MFinsI;
 trajCalcs.dmdt = dmdt;
 trajCalcs.MOI = MOI;
 trajCalcs.accel = accel;
+trajCalcs.angAccel = angAccel;
 
 
 end
