@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function V = quatVectorRotation(q, v)
 
 [m, n] = size(q);

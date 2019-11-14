@@ -1,5 +1,8 @@
+% Destiny Fawley
+% 11/6/2019
+
 function qi2b = quatFromEulerAngles(angPos)
-% Get quat inertial to body for Euler angle sequence roll, pitch, yaw.
+% Get quat inertial to body for 321 Euler angle sequence yaw(Z), pitch(Y), roll(X).
 % quat is scalar-first
 
 

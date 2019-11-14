@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function unitVec = unit(v)
 
 [m, n] = size(v);

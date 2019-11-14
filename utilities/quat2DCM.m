@@ -1,3 +1,4 @@
+
 function dcm = quat2DCM( q )
 %  QUAT2DCM Convert quaternion to direction cosine matrix.
 %   N = QUAT2DCM( Q ) calculates the direction cosine matrix, N, for a

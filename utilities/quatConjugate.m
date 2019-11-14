@@ -1,3 +1,6 @@
+% Destiny Fawley
+% 11/6/2019
+
 function quatConj = quatConjugate(q)
 % Takes conjugate of scalar-first quaternion q. Can be given as [4 X N] or
 % [N X 4]. A [4 X 4] is assumed to have quaternion columns.

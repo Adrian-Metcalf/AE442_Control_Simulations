@@ -1,3 +1,5 @@
+
+
 function qout = quatRotate( q, r )
 %  QUATROTATE Rotate a vector by a quaternion.
 %   N = QUATROTATE( Q, R ) calculates the rotated vector, N, for a
