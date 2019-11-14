@@ -1,3 +1,5 @@
+% Destiny Fawley
+% 11/6/2019
 function func = Controller
 % INTERFACE
 %
