@@ -6,7 +6,7 @@ function ydot = eom(tCurr, yi, rocket, motor, ctrl, models)
 trajCalcs = getTrajCalcs(tCurr, yi, rocket, motor, ctrl, models);
 
 %% Translational Acceleration
-aTrans = (trajCalcs.FGravI + trajCalcs.FThrustI + trajCalcs.FDragBodyI + sum(trajCalcs.FDragFinI,2))/trajCalcs.massTot...
+aTrans = (trajCalcs.FGravI + trajCalcs.FThrustI + trajCalcs.FLiftBodyI + trajCalcs.FDragBodyI + sum(trajCalcs.FDragFinI,2))/trajCalcs.massTot...
     + sum(trajCalcs.FLiftFinI,2);
 
 %% Angular Acceleration

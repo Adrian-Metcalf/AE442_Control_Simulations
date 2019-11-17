@@ -57,11 +57,22 @@ FDragFinI = .5*rho*velPerpMag.^2*rocket.fin.area.*cdFin.*dragVec;
 FLiftFinI = .5*rho*velPerpMag.^2*rocket.fin.area.*clFin.*liftVec;
 
 %% Body Tube and Nosecone Drag
+%Angle of body
+alphaBody = acos(dot(quatVectorRotation(quatConjugate(qi2b),[0 0 1]),unit(vel)));
+if alphaBody > pi/2
+    alphaBody = alphaBody - pi;
+end
+
 % Assume constant drag and no lift
-cdBody = rocket.aero.bodyCd;
+cdBody = 1.1*(sin(alphaBody)).^3+.02;
+clBody = 1.1*(sin(alphaBody)).^2.*cos(alphaBody);
+%rocket.aero.bodyCd;
 
 % Model drag on circular flat plate
-FDragBodyI = .5*rho*norm(vel)^2*cdBody*pi*(rocket.structure.tubeDiameter/2)^2;
+FDragBodyI = .5*rho*norm(vel)^2.*cdBody.*(rocket.structure.tubeDiameter*rocket.structure.length);
+FLiftBodyI = .5*rho*norm(vel)^2.*clBody.*(rocket.structure.tubeDiameter*rocket.structure.length);
+
+%
 
 %% Thrust Force
 if ctrl.igniteMotor
@@ -114,7 +125,7 @@ MThrustI = cross(rCgMotorI, FThrustI);
 sumMoments = sum(MFinsI,2) + MThrustI;
 
 angAccel = (MOI\eye(3))*sumMoments; % sum M = I*alpha
-accel = (sum(FFinsI')' + FDragBodyI + FThrustI + FGravI)/massTot;
+accel = (sum(FFinsI')' + FLiftBodyI + FDragBodyI + FThrustI + FGravI)/massTot;
 %% Store Data
 trajCalcs.cg = cg;
 trajCalcs.massTot = massTot;
@@ -135,6 +146,7 @@ trajCalcs.liftVec = liftVec;
 trajCalcs.FDragFinI = FDragFinI;
 trajCalcs.FLiftFinI = FLiftFinI;
 trajCalcs.FDragBodyI = FDragBodyI;
+trajCalcs.FLiftBodyI = FLiftBodyI;
 trajCalcs.FThrustI = FThrustI;
 trajCalcs.FGravI = FGravI;
 trajCalcs.MFinsI = MFinsI;
