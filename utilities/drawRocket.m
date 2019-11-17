@@ -45,7 +45,7 @@ axis off;
 box on;
 
 % view([180-37.5,20]);
-view([0 -1 0]);
+view([1 1 1]);
 set(gca,'projection','perspective');
 set(gca,'clipping','on','clippingstyle','3dbox');
 lighting gouraud
@@ -57,12 +57,18 @@ fig.view0.light = light('position',[-1;1;1],'style','local');
 for i = 1:length(result.traj.time)-1
     
     xvec = quatVectorRotation(quatConjugate(result.traj.qi2b(:,i)), [1 0 0]);
-    yvec = quatVectorRotation(quatConjugate(result.traj.qi2b(:,i)), [1 0 0]);
-    zvec = quatVectorRotation(quatConjugate(result.traj.qi2b(:,i)), [2 0 0]);
+    yvec = quatVectorRotation(quatConjugate(result.traj.qi2b(:,i)), [0 1 0]);
+    zvec = quatVectorRotation(quatConjugate(result.traj.qi2b(:,i)), [0 0 2]);
     
     X = plot3([result.traj.posI(1,i), xvec(1)+result.traj.posI(1,i)], ...
         [result.traj.posI(2,i), xvec(2)+result.traj.posI(2,i)], ...
-        [result.traj.posI(3,i), xvec(3)+result.traj.posI(3,i)], 'r->')
+        [result.traj.posI(3,i), xvec(3)+result.traj.posI(3,i)], 'r->');
+    Y = plot3([result.traj.posI(1,i), yvec(1)+result.traj.posI(1,i)], ...
+        [result.traj.posI(2,i), yvec(2)+result.traj.posI(2,i)], ...
+        [result.traj.posI(3,i), yvec(3)+result.traj.posI(3,i)], 'g->');
+    Z = plot3([result.traj.posI(1,i), zvec(1)+result.traj.posI(1,i)], ...
+        [result.traj.posI(2,i), zvec(2)+result.traj.posI(2,i)], ...
+        [result.traj.posI(3,i), zvec(3)+result.traj.posI(3,i)], 'b->');
     
     velocity = norm(result.traj.velI(:,i));
     if result.traj.velI(3,i) > 1
@@ -110,6 +116,8 @@ for i = 1:length(result.traj.time)-1
     
     delete(fig.rocket);
     delete(X);
+    delete(Y);
+    delete(Z);
     
     if isfield(fig,'thruster')
         delete(fig.thruster);

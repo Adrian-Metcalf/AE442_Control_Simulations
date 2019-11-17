@@ -12,6 +12,17 @@ if mod(i-1,nav.rateRatio) == 0 % rate limit calls to navigation
             nav.EulerAngles = y(7:9);
             nav.omega = y(10:12);
             
+            
+        case 2 % normal noise distribution
+            
+            nav.imu.accel = [0;0;-9.81];
+            nav.imu.omega = y(10:12);
+            nav.imu.mag = y(1:3);
+            
+            nav.baro.alt = y(3);
+            
+            
+            
     end
 end
 
