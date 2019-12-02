@@ -3,6 +3,8 @@
 
 function result = initialize(rocket, ctrl, nav, trajCalcs, models)
 
+rng(models.seed, 'twister'); % set random number generator settings
+
 % Trajectory
 result.traj.tCurr = NaN(1,length(models.maxIter));
 result.traj.posI = NaN(3,length(models.maxIter));

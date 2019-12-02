@@ -8,5 +8,6 @@ addpath('get');
 addpath('motor');
 addpath('rocket');
 addpath('navigation');
+addpath('Onboard Code');
 addpath('utilities');
 

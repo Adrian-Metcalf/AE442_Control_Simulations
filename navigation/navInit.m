@@ -1,20 +1,39 @@
 % Destiny Fawley
 % 11/6/2019
 
-function nav = navInit(models, y)
+function nav = navInit(models, y, trajCalcs)
 
 
 nav.rateRatio = round(models.integrationRate/models.navigationRate); % sim/nav rate ratio, nd
+nav.IMURateRatio = round(models.integrationRate/models.IMURate); % sim/IMU rate ratio, nd
+nav.MPLRateRatio = round(models.integrationRate/models.MPLRate); % sim/MPL rate ratio, nd
 
 % initialize states
-nav.imu.accel = [0;0;-9.81];
-nav.imu.omega = y(10:12);
-nav.imu.mag = y(1:3);
+% noise on IMU acceleration reading
+accelNoise = normrnd(models.IMUAccelNoiseBias,...
+    models.IMUAccelNoiseStd,[3,1]);
+nav.imu9250.accel = trajCalcs.accel + accelNoise;
 
-nav.baro.alt = y(3);
+% noise on IMU gyro reading
+gyroNoise = normrnd(models.IMUGyroNoiseBias,...
+    models.IMUGyroNoiseStd,[3,1]);
+nav.imu9250.omega = y(10:12) + gyroNoise;
 
-nav.EulerAngles = y(7:9);
-nav.omega = y(10:12);
-nav.velI = y(4:6);
-nav.posI = y(1:3);
+% noise on IMU magnetometer reading
+magNoise = normrnd(models.IMUMagNoiseBias,...
+    models.IMUMagNoiseStd,[3,1]);
+nav.imu9250.mag = y(1:3) + magNoise;
+
+% noise on barometer
+baroNoise = normrnd(models.MPLAltNoiseBias,...
+    models.MPLAltNoiseStd,1);
+alt = y(3) + baroNoise;
+% limit resolution on altitude reading
+if mod(alt,models.MPLAltResolution) < models.MPLAltResolution/2
+    nav.baro.alt = alt - mod(alt,models.MPLAltResolution);
+else
+    nav.baro.alt = alt - mod(alt,models.MPLAltResolution)+models.MPLAltResolution;
+end
+
+
 end

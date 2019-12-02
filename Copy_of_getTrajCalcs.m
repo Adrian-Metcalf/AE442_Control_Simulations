@@ -110,24 +110,8 @@ MFinsI(:,3) = cross(rCgFinsI(:,3), FFinsI(:,3));
 MFinsI(:,4) = cross(rCgFinsI(:,4), FFinsI(:,4));
 
 rCgMotorI = quatVectorRotation(quatConjugate(qi2b),[0;0;motor.height/2-cg]);
+MThrustI = cross(rCgMotorI, FThrustI);
 
-phi = yi(9); % yaw(X)
-theta = yi(8); % pitch(Y)
-
-R = [0 sin(phi)/cos(theta) cos(phi)/cos(theta);
-    0 cos(phi) -sin(phi);
-    1 tan(theta)*sin(phi) cos(phi)*tan(theta)];
-
-Kp1 = .1;
-Kd1 = .1;
-Kp2 = .5;
-Kd2 = .1;
-Kp3 = .5;
-Kd3 = .1;
-MThrustB = [-Kp1*angPos(1) - Kd1 * angVel(1);
-    -Kp2*angPos(2) - Kd2 * angVel(2);
-    -Kp3*angPos(3) - Kd3 * angVel(3)];
-MThrustI = quatVectorRotation(quatConjugate(qi2b),MThrustB);
 sumMoments = sum(MFinsI,2) + MThrustI;
 
 angAccel = (MOI\eye(3))*sumMoments; % sum M = I*alpha

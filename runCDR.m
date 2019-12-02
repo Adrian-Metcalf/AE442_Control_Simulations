@@ -1,17 +1,17 @@
 % Destiny Fawley
 % 11/6/2019
 
-clear all;
+% clear all;
 close all
 run setup.m
 
-mass = 1.08;
+mass = .669;
 diameter = .0762;
 leng = .508;
-alt0 = 20;
+alt0 = 16;
 
 
-motor = E18Motor();
+motor = D12Motor();
 controller = [];
 models = getModels();
 
@@ -32,7 +32,7 @@ result = simulate(motor,rocket,controller, models);
 % ylabel('Altitude, m');
 % 
 % set(gca, 'FontName', 'Times New Roman','fontsize',30)
-% 
+
 % set(gcf,'paperorientation','portrait');
 % set(gcf,'paperunits','normalized')
 % set(gcf,'paperposition',[0 0 1 1]);
@@ -40,16 +40,19 @@ result = simulate(motor,rocket,controller, models);
 % fig_name = strcat('mass=',num2str(mass),'length=',num2str(leng),...
 %     'diameter=',num2str(diameter),'.png');
 % print(gcf,'-dpng',fullfile(s_dir,fig_name));
-
-
-
-
-
 figure;
-plot(result.traj.time,result.traj.EulerAngles)
+plot(result.traj.time,result.traj.momentFin1I+result.traj.momentFin2I+result.traj.momentFin3I+result.traj.momentFin4I);
 hold on
-grid on
+plot(result.traj.time,result.traj.EulerAngles(2,:)*180/pi);
+hold on
+% plot(result.traj.time,result.traj.momentThrustI(1,:),'b');
+% plot(result.traj.time,result.traj.momentThrustI(2,:),'r');
+% plot(result.traj.time,result.traj.momentThrustI(3,:),'g');
+ylim([-10 10])
 
-plot(result.traj.time,result.traj.omega)
+% figure;
+% plot(result.traj.time,result.traj.EulerAngles*180/pi);
+% ylim([-10 10])
+
 %%
 drawRocket(result, rocket)

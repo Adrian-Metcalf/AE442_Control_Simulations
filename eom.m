@@ -5,18 +5,14 @@ function ydot = eom(tCurr, yi, rocket, motor, ctrl, models)
 
 trajCalcs = getTrajCalcs(tCurr, yi, rocket, motor, ctrl, models);
 
-%% Translational Acceleration
-aTrans = (trajCalcs.FGravI + trajCalcs.FThrustI + trajCalcs.FLiftBodyI + trajCalcs.FDragBodyI + sum(trajCalcs.FDragFinI,2))/trajCalcs.massTot...
-    + sum(trajCalcs.FLiftFinI,2);
-
-%% Angular Acceleration
+%% Translational and Rotational Acceleration
+aTrans = trajCalcs.accel;
 alpha = trajCalcs.angAccel;
 
 %% Angular Rates 
 % Need to convert angular velocity to 321 angular rates
 phi = yi(9); % yaw(X)
 theta = yi(8); % pitch(Y)
-psi = yi(7); % roll(Z)
 
 R = [0 sin(phi)/cos(theta) cos(phi)/cos(theta);
     0 cos(phi) -sin(phi);

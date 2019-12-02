@@ -3,15 +3,17 @@
 
 function trajCalcs = getTrajCalcs(tCurr, yi, rocket, motor, ctrl, models)
 
-pos = yi(1:3); % m, position vector, (x,y,z)
-vel = yi(4:6); % m/s, velocity vector
-angPos = yi(7:9); % rad, 321 euler angles, (theta, phi, psi) = (roll(Z), pitch(Y), yaw(X))
+syms PHI PSI THETA ZDOT Z real
+
+pos = [0 0 Z];%yi(1:3); % m, position vector, (x,y,z)
+vel = [0;0;ZDOT];%yi(4:6); % m/s, velocity vector
+angPos = [0; PHI; PSI]; % rad, 321 euler angles, (theta, phi, psi) = (roll(Z), pitch(Y), yaw(X))
 angVel = yi(10:12); % rad/s, inertial angular velocity (NOT angular rates)
 propMass = yi(13); % kg, mass of propellant left
 
 cg = getCg(rocket, motor, propMass); % cg from bottom of rocket
 massTot = propMass + motor.dryMass + rocket.structure.dryMass;
-rho = getAtmDensity(pos(3), models);
+rho = 1.16;%getAtmDensity(pos(3), models);
 qi2b = quatFromEulerAngles(angPos);
 MOI = getMOI(rocket, motor, cg, yi);
 
@@ -31,8 +33,8 @@ for i = 1:length(finAngles)
         + [0; 0; 1]*(rocket.structure.length - cg);
 end
 
-finNormalsI = unit(quatVectorRotation(quatConjugate(qi2b),finNormalsB));
-finRadialVecI = unit(quatVectorRotation(quatConjugate(qi2b),finRadialVecB)); 
+finNormalsI = (quatVectorRotation(quatConjugate(qi2b),finNormalsB));
+finRadialVecI = (quatVectorRotation(quatConjugate(qi2b),finRadialVecB)); 
 rCgFinsI = quatVectorRotation(quatConjugate(qi2b), rCgFinsB);
 
 % Decompose velocity into component parallel to fin and perp to fin
@@ -42,7 +44,7 @@ velPerpMag = normVectorColumn(velPerp);
 
 % Calculate drag on fin area perp to velocity
 alpha = -(pi/2 - acos(dot(finNormalsI,unit(velPerp)))); % rad, angle of attack of fin
-alpha(normVectorColumn(velPerp) == 0) = 0;
+% alpha(normVectorColumn(velPerp) == 0) = 0;
 % for i = 1:length(alpha)
 %     if dot(finNormalsI(:,i),velPerp(:,i)) < 0
 %         alpha(i) = -alpha(i);
@@ -52,7 +54,7 @@ clFin = rocket.aero.finClSlope*alpha; % lift coefficient, update with better mod
 cdFin = rocket.aero.finCd; % assume a cd for now, update this later
 
 dragVec = -unit(velPerp); % nd, direction of drag vec
-liftVec = cross(finRadialVecI, dragVec);
+liftVec = cross(dragVec, finRadialVecI);
 liftVec = unit(liftVec); % nd, direction of lift vector
 
 FDragFinI = .5*rho*velPerpMag.^2*rocket.fin.area.*cdFin.*dragVec;
@@ -110,24 +112,8 @@ MFinsI(:,3) = cross(rCgFinsI(:,3), FFinsI(:,3));
 MFinsI(:,4) = cross(rCgFinsI(:,4), FFinsI(:,4));
 
 rCgMotorI = quatVectorRotation(quatConjugate(qi2b),[0;0;motor.height/2-cg]);
+MThrustI = cross(rCgMotorI, FThrustI);
 
-phi = yi(9); % yaw(X)
-theta = yi(8); % pitch(Y)
-
-R = [0 sin(phi)/cos(theta) cos(phi)/cos(theta);
-    0 cos(phi) -sin(phi);
-    1 tan(theta)*sin(phi) cos(phi)*tan(theta)];
-
-Kp1 = .1;
-Kd1 = .1;
-Kp2 = .5;
-Kd2 = .1;
-Kp3 = .5;
-Kd3 = .1;
-MThrustB = [-Kp1*angPos(1) - Kd1 * angVel(1);
-    -Kp2*angPos(2) - Kd2 * angVel(2);
-    -Kp3*angPos(3) - Kd3 * angVel(3)];
-MThrustI = quatVectorRotation(quatConjugate(qi2b),MThrustB);
 sumMoments = sum(MFinsI,2) + MThrustI;
 
 angAccel = (MOI\eye(3))*sumMoments; % sum M = I*alpha

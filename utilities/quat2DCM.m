@@ -22,7 +22,7 @@ function dcm = quat2DCM( q )
 
 %   Copyright 2000-2007 The MathWorks, Inc.
 
-qin = quatnormalize( q );
+qin = unit( q )';
 
 dcm = zeros(3,3,size(qin,1));
 

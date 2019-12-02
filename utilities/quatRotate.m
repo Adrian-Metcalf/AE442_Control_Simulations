@@ -32,9 +32,9 @@ function qout = quatRotate( q, r )
 
 %   Copyright 2000-2010 The MathWorks, Inc.
     
-if any(~isreal(q(:)))
-    error(message('aero:quatrotate:isNotReal1'));
-end
+% if any(~isreal(q(:)))
+%     error(message('aero:quatrotate:isNotReal1'));
+% end
 
 if (size(q,2) ~= 4)
     error(message('aero:quatrotate:wrongDimension1'));

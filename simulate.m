@@ -9,7 +9,8 @@ dt = 1/models.integrationRate;
 
 ctrl = controlInit(controller, models);
 trajCalcs = getTrajCalcs(tCurr, y, rocket, motor, ctrl, models);
-nav = navInit(models, y);
+nav = navInit(models, y, trajCalcs);
+% onboard = codeSetup(y, tCurr, trajCalcs, models, onboard, i);
 result = initialize(rocket, ctrl, nav, trajCalcs, models);
 
 terminate = 0;
@@ -33,6 +34,7 @@ while ~terminate
     
     nav = navigation(y,tCurr, trajCalcs, models, nav, counter);
     ctrl = control(motor, rocket, ctrl, nav, tCurr, models, counter);
+%     onboard = codeSetup(y, tCurr, trajCalcs, models, onboard, i);
     
     % check termination conditions
     if y(3) <= models.minAlt
@@ -82,21 +84,23 @@ result.traj.momentFin2I(:,counter) = trajCalcs.MFinsI(:,2);
 result.traj.momentFin3I(:,counter) = trajCalcs.MFinsI(:,3);
 result.traj.momentFin4I(:,counter) = trajCalcs.MFinsI(:,4);
 
+result.traj.momentThrustI(:,counter) = trajCalcs.MThrustI;
+
 result.traj.rho(:,counter) = trajCalcs.rho;
 result.traj.qi2b(:,counter) = trajCalcs.qi2b;
 result.traj.MOI(:,counter) = diag(trajCalcs.MOI);
 result.traj.clFin(:,counter) = trajCalcs.clFin';
 result.traj.cdFin(:,counter) = trajCalcs.cdFin';
 result.traj.aoaFin(:,counter) = trajCalcs.alpha';
-result.traj.accel(:,counter) = trajCalcs.accel';
+result.traj.accel(:,counter) = trajCalcs.accel;
 
 
 
 % Navigation
-result.nav.posI(:,counter) = nav.posI;
-result.nav.velI(:,counter) = nav.velI;
-result.nav.EularAngles(:,counter) = nav.EulerAngles;
-result.nav.omega(:,counter) = nav.omega;
+result.nav.imu9250.accel(:,counter) = nav.imu9250.accel;
+result.nav.imu9250.omega(:,counter) = nav.imu9250.omega;
+result.nav.imu9250.mag(:,counter) = nav.imu9250.mag;
+result.nav.baro.alt(:,counter) = nav.baro.alt;
 
 % Control
 result.ctrl.igniteMotor(counter) = ctrl.igniteMotor;
